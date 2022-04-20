@@ -10,7 +10,7 @@
     "start": "npx ts-node ./src/server/server.ts",
     "build:watch": "npx webpack --mode=development --watch",
     "build": "npx webpack ./src/client/client.tsx --mode=production",
-    "deploy": "git push heroku master",
+    "deploy": "git push heroku master"
   },
   "author": "",
   "license": "ISC",
