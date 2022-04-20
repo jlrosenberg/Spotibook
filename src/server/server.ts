@@ -1,9 +1,12 @@
 import express from "express";
+import { getFeed } from "./controllers/feed.controller";
 const path = require('path')
 
 const PORT=process.env.port ?? 4443
 
 const app = express();
+
+app.use(express.json())
 
 // Serves the frontend dist code
 app.use(express.static('dist', {index: 'index.html'}))
@@ -15,10 +18,9 @@ app.use(express.static('dist', {index: 'index.html'}))
 
 // PUT OTHER ROUTES HERE
 
+app.get('/api/feed', getFeed);
 
 /* final catch-all route to index.html defined last */
-// app.get('/*', express.static('dist', {index: 'index.html'}))
-/* GET React App */
 app.get('*', function(req, res, next) {
   console.log('here')
   res.sendFile(path.join(__dirname, '../../dist/'));

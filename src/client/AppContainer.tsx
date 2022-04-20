@@ -1,14 +1,12 @@
-import { Button, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
 import React from 'react';
 import { theme } from './common/theme';
-import { NavBar } from './components/NavBar';
+import { Router } from './pages/Router';
 
 export const AppContainer = () => {
   return (
     <ThemeProvider theme={theme}>
-      <NavBar />
-      <Button variant="outlined">This is a test button</Button>
-      <div>foobar</div>
+      <Router />
     </ThemeProvider>
   );
 };

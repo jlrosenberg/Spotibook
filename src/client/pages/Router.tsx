@@ -1,23 +1,29 @@
 import React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HomePage } from "./HomePage";
 import { LoggedInPage } from "./LoggedInPage";
 import { LoginPage } from "./LoginPage";
 import { RegistrationPage } from "./RegistrationPage";
 
 export const Router = () => {
   // TODO for auth protected pages, redirect to Login Page
-  const isAuthed = true;
+  // const isAuthed = true;
 
   // TODO do a 404 page for routes that don't match
   return (
     <BrowserRouter>
-      <Route path="/login">
-        <LoginPage />
-      </Route>
-      <Route path="/registration">
-        <RegistrationPage />
-      </Route>
-      <Route path="/" element={<LoggedInPage />}></Route>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+
+        <Route path="/registration" element={<RegistrationPage />} />
+
+        <Route path="/" element={<LoggedInPage />}>
+          {/* TODO remove dupe routes by using the useRoutes hook introduced with v6 */}
+          <Route path='/home' element={<HomePage />} />
+          <Route path='/' element={<HomePage />} />
+          
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 };
