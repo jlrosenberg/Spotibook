@@ -6,10 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:client": "npx webpack serve --mode=development",
-    "start": "nodemon --watch src/server --watch dist  ./src/server/server.ts",
-    "prod": "npx ts-node ./src/server/server.ts",
+    "dev": "nodemon --watch src/server --watch dist  ./src/server/server.ts",
+    "start": "npx ts-node ./src/server/server.ts",
     "build:watch": "npx webpack --mode=development --watch",
-    "build": "npx webpack ./src/client/client.tsx --mode=production"
+    "build": "npx webpack ./src/client/client.tsx --mode=production",
+    "deploy": "git push heroku master",
   },
   "author": "",
   "license": "ISC",
