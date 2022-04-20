@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
+import { generateMockPost } from "../../shared/models/post";
 
 const makeMockPost = () => {
   return {
     id: "1",
     message: "Hello World",
-    createdAt: new Date(),
+    songId: '4cOdK2wGLETKBW3PvgPWqT',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     user: {
       id: "1",
       name: "John Doe",
@@ -15,7 +18,7 @@ const makeMockPost = () => {
 
 export const getFeed = async (req: Request, res: Response) => {
   console.log("getting feed")
-  const posts = [makeMockPost(), makeMockPost()]
+  const posts = [generateMockPost(), generateMockPost(), generateMockPost(), generateMockPost()];
 
   console.log(posts)
   res.json({
