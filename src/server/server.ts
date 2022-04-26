@@ -1,5 +1,6 @@
 import express from "express";
 import { getFeed } from "./controllers/feed.controller";
+import { getProfile } from "./controllers/profile.controller";
 const path = require('path')
 
 const PORT=process.env.port ?? 4443
@@ -18,7 +19,8 @@ app.use(express.static('dist', {index: 'index.html'}))
 
 // PUT OTHER ROUTES HERE
 
-app.get('/api/feed', getFeed);
+app.get('/api/v1/feed', getFeed);
+app.get('/api/v1/profile/:profileId', getProfile)
 
 /* final catch-all route to index.html defined last */
 app.get('*', function(req, res, next) {
