@@ -8,6 +8,7 @@ export interface PostPayload extends Document {
   updatedAt: Date;
   user: UserPayload;
   explicit: boolean;
+  likes: { username: string }[];
 }
 
 export interface UserPayload extends Document {

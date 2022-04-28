@@ -9,6 +9,7 @@ export interface IPost {
   updatedAt: Date;
   user: Types.ObjectId | IUser;
   explicit: boolean;
+  likes: Types.ObjectId[];
 }
 
 const postSchema = new Schema<IPost>({
