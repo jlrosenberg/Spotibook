@@ -1,10 +1,9 @@
-import * as $ from 'jquery';
-import { Profile } from '../../shared/models/profile';
+import * as $ from "jquery";
+import { UserPayload } from "../../shared/payloads";
 
 export class ProfileService {
-
-  static getProfile = async (profileId: any): Promise<Profile> => {
-    const res = await $.get(`/api/v1/profile/${profileId}`)
+  static getProfile = async (profileId: any): Promise<UserPayload> => {
+    const res = await $.get(`/api/v1/profile/${profileId}`);
     return res;
-  }
+  };
 }

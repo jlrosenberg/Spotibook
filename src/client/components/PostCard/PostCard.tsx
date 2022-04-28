@@ -2,11 +2,11 @@ import { ThumbUp, Share, Comment } from "@mui/icons-material";
 import { Card, CardHeader, Avatar, IconButton, CardContent, CardActions, Theme, Typography } from "@mui/material";
 import React from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import type { Post} from '../../../shared/models/post';
+import type {PostPayload} from '../../../shared/payloads';
 import { makeStyles } from "@mui/styles";
 
 interface Props {
-  post: Post;
+  post: PostPayload;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
