@@ -1,22 +1,24 @@
-APIs to build: 
+APIs to build:
 
-- Users: 
-   - GET 
-   - PATCH
-   - POST
+- Users:
+
+  - GET
+  - PATCH
+  - POST
 
 - Sessions:
-   - POST
-   - DELETE
+
+  - POST
+  - DELETE
 
 - Posts:
-   - CREATE
-   - PATCH
-   - GET
+
+  - CREATE
+  - GET
 
 - Likes
-   - CREATE
 
-- Comments
-   - CREATE
-   
+  - CREATE
+
+- Search
+  - GET

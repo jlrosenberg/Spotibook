@@ -1,6 +1,6 @@
-import { UserRole } from "./models/user";
+import { IUser, UserRole } from "./models/user";
 
-export interface PostPayload extends Document {
+export interface PostPayload {
   _id: string;
   message: string;
   songId: string;
@@ -8,10 +8,10 @@ export interface PostPayload extends Document {
   updatedAt: Date;
   user: UserPayload;
   explicit: boolean;
-  likes: { username: string }[];
+  likes: { _id: string }[];
 }
 
-export interface UserPayload extends Document {
+export interface UserPayload {
   _id: string;
   name: string;
   email: string;
@@ -19,5 +19,18 @@ export interface UserPayload extends Document {
   role: UserRole;
   ssn: undefined | number;
   age: undefined | number;
-  following: { username: string }[];
+  following: { _id: string }[];
 }
+
+export const generateUserPayload = (user: any): UserPayload => {
+  return {
+    _id: user.id,
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar,
+    role: user.role,
+    ssn: user.ssn,
+    age: user.age,
+    following: user.following,
+  };
+};

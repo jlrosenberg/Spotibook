@@ -132,6 +132,8 @@ export const RegistrationPage = () => {
     }
   }
 
+  const spotifyLink = `https://accounts.spotify.com/authorize?client_id=fe7bc60e523f49aaa3b32acf5ed56350&response_type=code&redirect_uri=http://localhost:4443/spotify_authorize&scope=user-read-private%20user-read-email`
+
   return (
     <div className={classes.root}>
       <Typography variant="h2" className={classes.appNameMobile}>Spotibook</Typography>
@@ -179,7 +181,7 @@ export const RegistrationPage = () => {
           helperText={passwordError}
           fullWidth
         />
-        <Button type="submit" variant="contained" color="primary" fullWidth>Create Account</Button>
+        <Button type="submit" variant="contained" color="primary" fullWidth><a target={"_blank"} href={spotifyLink}>Create Account</a></Button>
         </div>
         <div/>
       </form>

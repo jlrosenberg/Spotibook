@@ -12,14 +12,17 @@ export interface IPost {
   likes: Types.ObjectId[];
 }
 
-const postSchema = new Schema<IPost>({
-  message: { type: String, required: true },
-  songId: { type: String, required: true },
-  createdAt: { type: Date, required: true },
-  updatedAt: { type: Date, required: true },
-  user: { type: Schema.Types.ObjectId, ref: "users" },
-  explicit: { type: Boolean, default: false },
-});
+const postSchema = new Schema<IPost>(
+  {
+    message: { type: String, required: true },
+    songId: { type: String, required: true },
+    createdAt: { type: Date, required: true },
+    updatedAt: { type: Date, required: true },
+    user: { type: Schema.Types.ObjectId, ref: "users" },
+    explicit: { type: Boolean, default: false },
+  },
+  { collection: "posts" }
+);
 
 const Post = model<IPost>("Post", postSchema);
 

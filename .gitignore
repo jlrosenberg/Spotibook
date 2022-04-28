@@ -3,3 +3,4 @@ node_modules/
 src/dist
 src/server/dist
 data/
+.env

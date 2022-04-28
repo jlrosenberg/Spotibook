@@ -12,27 +12,31 @@ export interface IUser {
   role: UserRole;
   ssn: undefined | number;
   age: undefined | number;
-  following: Types.ObjectId[];
+  following: (Types.ObjectId | { _id: string })[];
 }
 
-const userSchema = new Schema<IUser>({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  avatar: { type: String, required: true },
-  role: { type: String, enum: UserRole, default: UserRole.STANDARD },
-  ssn: {
-    type: Number,
-    required: function () {
-      return (this as any).role === UserRole.STANDARD;
+const userSchema = new Schema<IUser>(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    avatar: { type: String, required: true },
+    role: { type: String, enum: UserRole, default: UserRole.STANDARD },
+    ssn: {
+      type: Number,
+      required: function () {
+        return (this as any).role === UserRole.STANDARD;
+      },
     },
-  },
-  age: {
-    type: Number,
-    required: function () {
-      return (this as any).role === UserRole.CHILD;
+    age: {
+      type: Number,
+      required: function () {
+        return (this as any).role === UserRole.CHILD;
+      },
     },
+    following: { type: Schema.Types.ObjectId, ref: "users" },
   },
-});
+  { collection: "users" }
+);
 
 const User = model<IUser>("User", userSchema);
 
