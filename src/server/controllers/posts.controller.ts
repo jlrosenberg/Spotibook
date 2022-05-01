@@ -62,4 +62,16 @@ export const createPost = async (req: Request<CreatePostPayload>, res: Response)
     res.status(201).json(post)
 };
 
-export const likePost = async (req: Request, res: Response) => {};
+export const likePost = async (req: Request, res: Response) => {
+    const user = getUserFromRequest(req);
+    const postId = req.params.postId;
+    const post = await Post.findById(postId);
+    if(!post) {
+        res.status(404).json({error: "Post not found"})
+    }
+    const userId = (await User.findById(user.user_id))._id
+
+    post.likes.push(userId);
+    await post.save();
+    res.status(200).json(post)
+};

@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import type { PostPayload } from "../../../shared/payloads";
 import { makeStyles } from "@mui/styles";
+import { FeedService } from "../../services/FeedService";
 
 interface Props {
   post: PostPayload;
@@ -34,6 +35,10 @@ export const PostCard: React.FC<Props> = ({ post }) => {
   const onMoreClick = (e: any) => {
     setAnchorEl(e.currentTarget)
   };
+
+  const onLikeClick = async() => {
+    await FeedService.likePost(post._id);
+  }
 
   return (
     <Card>
@@ -78,7 +83,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
         ></iframe>
       </CardContent>
       <CardActions>
-        <IconButton>
+        <IconButton onClick={onLikeClick}>
           <ThumbUp />
         </IconButton>
         <IconButton>

@@ -26,4 +26,11 @@ export class FeedService {
     const res = await $.get(`/api/v1/songs/${songId}/posts`)
     return res
   }
+
+  static likePost = async(postId: any): Promise<any> => {
+    const res = await $.ajax(`/api/v1/posts/${postId}/like`, {
+      method: "POST",
+    });
+    return res
+  }
 }
