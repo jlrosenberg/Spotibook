@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { EditProfilePage } from "./EditProfilePage";
 import { HomePage } from "./HomePage";
 import { LoggedInPage } from "./LoggedInPage";
 import { LoginPage } from "./LoginPage";
@@ -22,6 +23,7 @@ export const Router = () => {
           {/* TODO remove dupe routes by using the useRoutes hook introduced with v6 */}
           <Route path='/home' element={<HomePage />} />
           <Route path='/' element={<HomePage />} />
+          <Route path='/profile/:profileId/edit' element={<EditProfilePage /> } />
           <Route path='/profile/:profileId' element={<ProfilePage /> } />
           
         </Route>

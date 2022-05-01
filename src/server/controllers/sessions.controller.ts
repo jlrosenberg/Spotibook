@@ -53,5 +53,9 @@ export const logout = async (req: Request, res: Response) => {
 
 export const isLoggedIn = async (req: Request, res: Response) => {
   const user = getUserFromRequest(req);
-  res.json(user);
+  if(!user){
+      res.json(false)
+  }
+  let toReturn = await User.findById(user.user_id)
+  res.json(toReturn)
 };

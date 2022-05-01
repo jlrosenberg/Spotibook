@@ -13,29 +13,38 @@ import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { FeedService } from "../../services/FeedService";
 import { SearchService } from "../../services/SearchService";
+import { CurrentUserStore } from "../../stores/CurrentUserStore";
 
 export const PostCreationCard = () => {
   const [songs, setSongs] = useState<any>([]);
   const [song, setSong] = useState<any>();
   const [message, setMessage] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
+  const user = CurrentUserStore.getInstance().user;
+  const isChild = user.role === "CHILD";
 
   const searchForSongs = async (term: string) => {
     const newSongs = await SearchService.searchForSongs(term);
     // console.log(newSongs);
-    setSongs(newSongs);
+    if(isChild){
+      setSongs(newSongs.filter(song => !song.explicit));
+    }else{
+      setSongs(newSongs);
+
+    }
   };
 
   const onSubmitClicked = async () => {
     console.log("create post on backend");
 
     setSubmitting(true);
-    const res = await FeedService.createPost({
+    await FeedService.createPost({
       message,
       songId: song.id,
-      explicit: true,
+      explicit: song.explicit,
     });
-    console.log(res);
+    setSubmitting(false);
+    // console.log(res);
   };
   return (
     <Card>

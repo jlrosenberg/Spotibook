@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 export const NavBar = observer(() => {
   const classes = useStyles();
   const navigate = useNavigate()
-  const user = CurrentUserStore.getInstance().getUser();
+  const user = CurrentUserStore.getInstance().user;
   
   const onProfileClicked = (e: any) => {
     setAnchorEl(e.currentTarget)
@@ -55,11 +55,11 @@ export const NavBar = observer(() => {
   const [anchorEl, setAnchorEl] = useState();
 
   const onViewProfile = () => {
-    navigate(`/profile/${user.user_id}`);
+    navigate(`/profile/${user.user_id ?? user._id}`);
   }
 
   const onEditProfile = () => {
-    navigate(`/profile/${user.user_id}/edit`);
+    navigate(`/profile/${user.user_id ?? user._id}/edit`);
   }
 
   const onLogOut = async() => {

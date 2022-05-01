@@ -31,16 +31,16 @@ export const getPostsByUser = async (req: Request, res: Response) => {
 export interface CreatePostPayload {
     message: string;
     songId: string;
+    explicit?: boolean;
   }
 
 export const createPost = async (req: Request<CreatePostPayload>, res: Response) => {
     const user = getUserFromRequest(req);
-    const { message, songId } = req.body;
+    const { message, songId, explicit } = req.body;
     const filter = new Filter();
-    const isExplicit = filter.isProfane(message)
+    const isExplicit = filter.isProfane(message) || explicit
     if(isExplicit && user.role==="CHILD") {
         res.status(400).json({error: "Children cannot post explicit content"})
-
     }
 
     const post = await Post.create({

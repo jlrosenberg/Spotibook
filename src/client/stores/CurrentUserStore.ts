@@ -1,28 +1,24 @@
-import { action, observable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 
 export class CurrentUserStore {
-	private static instance: CurrentUserStore;
-	@observable private user: any;
+  private static instance: CurrentUserStore;
+  user: any = null;
 
+  private constructor() {
+    makeObservable(this, {
+      user: observable,
+      setUser: action,
+    });
+  }
 
-	private constructor() {
-		this.user = null;
-	}
+  static getInstance(): CurrentUserStore {
+    if (!CurrentUserStore.instance) {
+      CurrentUserStore.instance = new CurrentUserStore();
+    }
+    return CurrentUserStore.instance;
+  }
 
-	static getInstance(): CurrentUserStore {
-		if (!CurrentUserStore.instance) {
-			CurrentUserStore.instance = new CurrentUserStore();
-		}
-		return CurrentUserStore.instance;
-	}
-
-	getUser = () => {
-		return this.user;
-	}
-
-	@action
-	setUser = (user: any) => {
-		this.user = user;
-	}
-
+  setUser = (user: any) => {
+    this.user = user;
+  };
 }
