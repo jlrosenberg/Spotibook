@@ -37,6 +37,11 @@ export const EditProfilePage = () => {
   const classes = useStyles();
   const currentUser = CurrentUserStore.getInstance().user;
   const navigate = useNavigate();
+  const loggedIn = !!currentUser
+
+  if (loggedIn === false) {
+    navigate("/login", { replace: true });
+  }
 
   // TODO once we add admin roles, add check for that here
   if (currentUser._id !== profileId) {

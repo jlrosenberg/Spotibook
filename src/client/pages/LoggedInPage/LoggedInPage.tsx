@@ -1,7 +1,7 @@
 import { CircularProgress, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { NavBar } from "../../components/NavBar";
 import { LoginService } from "../../services/LoginService";
 
@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 
 export const LoggedInPage = () => {
   const classes = useStyles();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState<boolean>();
 
   const checkLoggedIn = async () => {
@@ -34,9 +34,9 @@ export const LoggedInPage = () => {
     setLoggedIn(isLoggedIn);
   };
 
-  if (loggedIn === false) {
-    navigate("/login", { replace: true });
-  }
+  // if (loggedIn === false) {
+  //   navigate("/login", { replace: true });
+  // }
 
   useEffect(() => {
     console.log("here");

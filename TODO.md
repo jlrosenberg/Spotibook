@@ -1,6 +1,5 @@
 Things to do REQUIRED: 
 - Child Censor Bad Words when Fetching Posts
-- Remove Forced Auth from Home Page and View Profile Page
 - Fix register link on login page
 - NavBar styling/links on small width screens
 - Make it so clicking on Spotibook in nav bar goes to home feed

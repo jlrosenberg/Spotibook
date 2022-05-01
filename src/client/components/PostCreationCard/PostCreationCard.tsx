@@ -7,6 +7,7 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FeedService } from "../../services/FeedService";
 import { CurrentUserStore } from "../../stores/CurrentUserStore";
 import { SongPicker } from "../SongPicker";
@@ -17,18 +18,26 @@ export const PostCreationCard = () => {
   const [submitting, setSubmitting] = useState(false);
   const user = CurrentUserStore.getInstance().user;
   const isChild = user.role === "CHILD";
+  const isLoggedIn = !!user;
+  const navigate = useNavigate();
 
   const onSubmitClicked = async () => {
-    console.log("create post on backend");
-
-    setSubmitting(true);
-    await FeedService.createPost({
-      message,
-      songId: song.id,
-      explicit: song.explicit,
-    });
-    setSubmitting(false);
-    // console.log(res);
+    if (!isLoggedIn) {
+      alert(
+        "You must be logged in to create a post. You will be redirected to login page"
+      );
+      navigate("/login");
+    } else {
+      setSubmitting(true);
+      await FeedService.createPost({
+        message,
+        songId: song.id,
+        explicit: song.explicit,
+      });
+      setMessage(undefined);
+      setSong(undefined);
+      setSubmitting(false);
+    }
   };
   return (
     <Card>

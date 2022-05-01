@@ -18,6 +18,7 @@ import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import { LoginService } from "../services/LoginService";
 import { SongPicker } from "./SongPicker";
+import { Login } from "@mui/icons-material";
 
 const useStyles = makeStyles({
   root: {
@@ -44,7 +45,12 @@ export const NavBar = observer(() => {
   const user = CurrentUserStore.getInstance().user;
   const filterExplicit = user?.role === "CHILD";
 
+  const loggedIn = !!user
   const onProfileClicked = (e: any) => {
+    if(!loggedIn) {
+      alert("To take profile actions, you must be logged in. You will now be redirected");
+      navigate('/login');
+    }
     setAnchorEl(e.currentTarget);
   };
   const [anchorEl, setAnchorEl] = useState();
@@ -93,7 +99,7 @@ export const NavBar = observer(() => {
           />
         </div>
         <IconButton onClick={onProfileClicked}>
-          <Avatar src={user.avatar} />
+          {user ? <Avatar src={user.avatar} /> : <Login />}
         </IconButton>
         <Popover
           id="settings"

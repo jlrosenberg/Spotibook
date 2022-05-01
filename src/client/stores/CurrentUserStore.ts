@@ -8,6 +8,7 @@ export class CurrentUserStore {
     makeObservable(this, {
       user: observable,
       setUser: action,
+      // getIsLoggedIn: computed,
     });
   }
 
@@ -16,6 +17,10 @@ export class CurrentUserStore {
       CurrentUserStore.instance = new CurrentUserStore();
     }
     return CurrentUserStore.instance;
+  }
+
+  getIsLoggedIn() {
+    return !!this.user;
   }
 
   setUser = (user: any) => {
