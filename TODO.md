@@ -5,6 +5,7 @@ Things to do REQUIRED:
 - Fix register link on login page
 - add like/dislike functionality
 - NavBar styling/links on small width screens
+- Add follow button to profiles page when not self
 
 Things I'm not sure if are required
 - Add unfollow
@@ -13,6 +14,7 @@ Things I'm not sure if are required
 
 Things to do nice to have:
 - navigate to user when clicking their name on a post
+- Add follow button to post card when viweing post from someone not following
 - Admin Role? (can edit all profiles)
 - expose registration under /register too
 - Clean up post card bottom actions
