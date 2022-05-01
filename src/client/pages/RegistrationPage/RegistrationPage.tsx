@@ -1,15 +1,29 @@
-import { Button, TextField, Theme, Typography } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserRole } from "../../../shared/models/user";
 import { Colors } from "../../common/colors";
 import { BACKGROUND_IMAGE_1 } from "../../common/static";
+import { LoginService } from "../../services/LoginService";
+import { ProfileService } from "../../services/ProfileService";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    overflow: 'scroll',
+    overflow: "scroll",
     backgroundImage: `url(${BACKGROUND_IMAGE_1})`,
     height: "100vh",
     width: "100vw",
@@ -29,17 +43,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up("md")]: {
       position: "absolute",
       right: "100px",
-      width: '300px',
+      width: "300px",
       justifyContent: "space-between",
     },
     [theme.breakpoints.down("md")]: {
       width: "50%",
-      height: 'auto',
+      height: "auto",
       borderRadius: "32px",
       justifyContent: "center",
-      padding: '24px',
+      padding: "24px",
       opacity: 0.95,
-
     },
     [theme.breakpoints.down("sm")]: {
       width: "75%",
@@ -54,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: "16px !important",
   },
   appName: {
-    marginTop: '16px !important',
+    marginTop: "16px !important",
     // [theme.breakpoints.up("md")]: {
     //   position: "absolute",
     //   right: "130px",
@@ -62,128 +75,219 @@ const useStyles = makeStyles((theme: Theme) => ({
     //   zIndex: 3,
     //   marginBottom: '16px',
     // },
-    [theme.breakpoints.down('md')]: {
-      display: 'none',
-    }
-
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
   },
   appNameMobile: {
-    marginBottom: '16px !important',
-    [theme.breakpoints.up('md')]: {
-      display: 'none'
-    }
-
+    marginBottom: "16px !important",
+    [theme.breakpoints.up("md")]: {
+      display: "none",
+    },
   },
   slugContainer: {
-    marginRight: 'auto',
-    [theme.breakpoints.down('lg')]: {
-      maxWidth: '60%'
-    }   
+    marginRight: "auto",
+    [theme.breakpoints.down("lg")]: {
+      maxWidth: "60%",
+    },
   },
   slug1: {
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    }
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
   },
   slug2: {
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    }
-  }
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+  },
 }));
 
 export const RegistrationPage = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [verifyPassword, setVerifyPassword] = useState<string>();
-  const [name, setName] = useState<string>()
+  const [name, setName] = useState<string>();
   const [passwordError, setPasswordError] = useState<string>();
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [ssn, setSsn] = useState<number>();
+  const [role, setRole] = useState<UserRole>();
+  const [age, setAge] = useState<number>();
 
-  const onRegistrationSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(e)
-    console.log("login submit");
-    console.log(email);
-    console.log(password);
-    console.log(name)
-  }
+  const onRegistrationSubmit = async (e: any) => {
+    e.preventDefault();
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !verifyPassword ||
+      password != verifyPassword ||
+      !role
+    ) {
+      setPasswordError("Please fill all fields");
+      return;
+    }
+    setSubmitting(true);
+    await ProfileService.createProfile({
+      name,
+      email,
+      password,
+      ssn,
+      role,
+      age,
+    });
+    checkLoggedIn()
+    setSubmitting(false);
+  };
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  }
+  };
 
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  }
+  };
 
   const onVerifyPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVerifyPassword(e.target.value);
-  }
+  };
 
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-  }
+  };
+
+  const onSsnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSsn(Number(e.target.value));
+  };
 
   const onVerifyPasswordBlur = () => {
-    if(password !== verifyPassword) {
-      setPasswordError('Passwords do not match');
-    }else{
-      setPasswordError(undefined)
+    if (password !== verifyPassword) {
+      setPasswordError("Passwords do not match");
+    } else {
+      setPasswordError(undefined);
     }
+  };
+
+  const checkLoggedIn = async() => {
+    const res = await LoginService.getIsLoggedIn() as any
+    if(res.email){
+      navigate('../home', {replace: true})
+    }
+    console.log(res)
   }
 
-  const spotifyLink = `https://accounts.spotify.com/authorize?client_id=fe7bc60e523f49aaa3b32acf5ed56350&response_type=code&redirect_uri=http://localhost:4443/spotify_authorize&scope=user-read-private%20user-read-email`
+  useEffect(()=>{
+    checkLoggedIn()
+  }, [])
 
   return (
     <div className={classes.root}>
-      <Typography variant="h2" className={classes.appNameMobile}>Spotibook</Typography>
+      <Typography variant="h2" className={classes.appNameMobile}>
+        Spotibook
+      </Typography>
       <div className={classes.slugContainer}>
-      <Typography variant="h3" className={classes.slug1}>Music is the Universal Language...</Typography>
-      <Typography variant="h1" className={classes.slug2}>Let's Talk.</Typography>
+        <Typography variant="h3" className={classes.slug1}>
+          Music is the Universal Language...
+        </Typography>
+        <Typography variant="h1" className={classes.slug2}>
+          Let's Talk.
+        </Typography>
       </div>
 
       <form className={classes.formContainer} onSubmit={onRegistrationSubmit}>
-        <Typography variant="h2" className={classes.appName}>Spotibook</Typography>
+        <Typography variant="h2" className={classes.appName}>
+          Spotibook
+        </Typography>
         <div>
-        <TextField
-          label="Email"
-          type="email"
-          placeholder="yourname@example.com"
-          onChange={onEmailChange}
-          className={classes.field}
-          fullWidth
-        />
-        <TextField
-          label="Name"
-          placeholder="John Doe"
-          onChange={onNameChange}
-          className={classes.field}
-          fullWidth
-        />
-        <TextField
-          label="Password"
-          type="password"
-          placeholder="*********"
-          onChange={onPasswordChange}
-          className={classes.field}
-          fullWidth
-          helperText="Password must be at least 8 characters long"
-          error={!!passwordError}
-        />
-        <TextField
-          label="Confirm your Password"
-          type="password"
-          placeholder="*********"
-          onChange={onVerifyPasswordChange}
-          onBlur={onVerifyPasswordBlur}
-          className={classes.field}
-          error={!!passwordError}
-          helperText={passwordError}
-          fullWidth
-        />
-        <Button type="submit" variant="contained" color="primary" fullWidth><a target={"_blank"} href={spotifyLink}>Create Account</a></Button>
+          <TextField
+            label="Email"
+            type="email"
+            placeholder="yourname@example.com"
+            onChange={onEmailChange}
+            className={classes.field}
+            fullWidth
+          />
+          <TextField
+            label="Name"
+            placeholder="John Doe"
+            onChange={onNameChange}
+            className={classes.field}
+            fullWidth
+          />
+          <FormControl style={{ width: "100%" }}>
+            <FormLabel>Account Type</FormLabel>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              name="radio-buttons-group"
+              onChange={(e) => setRole(e.target.value as UserRole)}
+            >
+              <FormControlLabel
+                value="STANDARD"
+                control={<Radio />}
+                label="Adult"
+              />
+              <FormControlLabel
+                value="CHILD"
+                control={<Radio />}
+                label="Child"
+              />
+            </RadioGroup>
+          </FormControl>
+          {role === "STANDARD" && (
+            <TextField
+              label="SSN"
+              type="number"
+              fullWidth
+              className={classes.field}
+              onChange={onSsnChange}
+            />
+          )}
+          {role === "CHILD" && (
+            <TextField
+              label="Age"
+              type="number"
+              className={classes.field}
+              fullWidth
+              onChange={(e) => {
+                setAge(Number(e.target.value));
+              }}
+            />
+          )}
+
+          <TextField
+            label="Password"
+            type="password"
+            placeholder="*********"
+            onChange={onPasswordChange}
+            className={classes.field}
+            fullWidth
+            helperText="Password must be at least 8 characters long"
+            error={!!passwordError}
+          />
+          <TextField
+            label="Confirm your Password"
+            type="password"
+            placeholder="*********"
+            onChange={onVerifyPasswordChange}
+            onBlur={onVerifyPasswordBlur}
+            className={classes.field}
+            error={!!passwordError}
+            helperText={passwordError}
+            fullWidth
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={submitting}
+          >
+            Create Account
+          </Button>
         </div>
-        <div/>
+        <div />
       </form>
     </div>
   );

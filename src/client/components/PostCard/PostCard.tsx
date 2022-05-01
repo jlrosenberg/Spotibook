@@ -1,8 +1,18 @@
 import { ThumbUp, Share, Comment } from "@mui/icons-material";
-import { Card, CardHeader, Avatar, IconButton, CardContent, CardActions, Theme, Typography } from "@mui/material";
-import React from "react";
+import {
+  Card,
+  CardHeader,
+  Avatar,
+  IconButton,
+  CardContent,
+  CardActions,
+  Theme,
+  Typography,
+  Popover,
+} from "@mui/material";
+import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import type {PostPayload} from '../../../shared/payloads';
+import type { PostPayload } from "../../../shared/payloads";
 import { makeStyles } from "@mui/styles";
 
 interface Props {
@@ -14,11 +24,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(0.5),
   },
   content: {
-    paddingTop: '0px !important',
-  }
-}))
+    paddingTop: "0px !important",
+  },
+}));
 export const PostCard: React.FC<Props> = ({ post }) => {
-  const classes = useStyles()
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState();
+
+  const onMoreClick = (e: any) => {
+    setAnchorEl(e.currentTarget)
+  };
+
   return (
     <Card>
       <CardHeader
@@ -26,9 +42,23 @@ export const PostCard: React.FC<Props> = ({ post }) => {
           <Avatar src={post.user.avatar}>{post.user.name.charAt(0)}</Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          <>
+            <IconButton aria-label="settings" aria-describedby={'settings'} onClick={onMoreClick}>
+              <MoreVertIcon />
+            </IconButton>
+            <Popover
+              id='settings'
+              open={!!anchorEl}
+              anchorEl={anchorEl}
+              onClose={() => setAnchorEl(undefined)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <Typography sx={{ p: 2 }}>Report Post</Typography>
+            </Popover>
+          </>
         }
         title={post.user.name}
         // TODO add a real date-time library and format this more human readable
@@ -38,7 +68,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
       <CardContent className={classes.content}>
         <Typography paragraph>{post.message}</Typography>
         <iframe
-          style={{borderRadius:'12px'}}
+          style={{ borderRadius: "12px" }}
           src={`https://open.spotify.com/embed/track/${post.songId}?utm_source=generator`}
           width="100%"
           height="80"

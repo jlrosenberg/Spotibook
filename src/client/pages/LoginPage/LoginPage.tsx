@@ -1,8 +1,10 @@
 import { Button, TextField, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Colors } from "../../common/colors";
 import { BACKGROUND_IMAGE_1 } from "../../common/static";
+import { LoginService } from "../../services/LoginService";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -65,12 +67,12 @@ export const LoginPage = () => {
   const classes = useStyles();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const navigate = useNavigate()
 
-  const onLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(e)
-    console.log("login submit");
-    console.log(email);
-    console.log(password);
+  const onLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await LoginService.login({email, password});
+    checkLoggedIn()
   }
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,6 +82,19 @@ export const LoginPage = () => {
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   }
+
+  const checkLoggedIn = async() => {
+    // TODO josh fix the return type of getIsLoggedIn 
+    const res = await LoginService.getIsLoggedIn() as any
+    if(res.email){
+      navigate('../home', {replace: true})
+    }
+    console.log(res)
+  }
+
+  useEffect(()=>{
+    checkLoggedIn()
+  }, [])
 
   return (
     <div className={classes.root}>

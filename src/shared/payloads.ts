@@ -1,4 +1,4 @@
-import { IUser, UserRole } from "./models/user";
+import { UserRole } from "./models/user";
 
 export interface PostPayload {
   _id: string;

@@ -1,17 +1,24 @@
 import { Schema, model, Types } from "mongoose";
 
-export enum UserRole {
+export enum UserRoleEnum {
   STANDARD = "STANDARD",
   CHILD = "CHILD",
 }
 
-export interface IUser {
+export type UserRole = "STANDARD" | "CHILD";
+export interface CreateUserPayload {
   name: string;
   email: string;
-  avatar: string;
+  password: string;
   role: UserRole;
-  ssn: undefined | number;
-  age: undefined | number;
+  ssn?: number;
+  age?: number;
+  avatar?: string;
+}
+
+export interface IUser extends CreateUserPayload {
+  password: string;
+  token: string;
   following: (Types.ObjectId | { _id: string })[];
 }
 
@@ -20,20 +27,22 @@ const userSchema = new Schema<IUser>(
     name: { type: String, required: true },
     email: { type: String, required: true },
     avatar: { type: String, required: true },
-    role: { type: String, enum: UserRole, default: UserRole.STANDARD },
+    role: { type: String, enum: UserRoleEnum, default: UserRoleEnum.STANDARD },
     ssn: {
       type: Number,
       required: function () {
-        return (this as any).role === UserRole.STANDARD;
+        return (this as any).role === UserRoleEnum.STANDARD;
       },
     },
     age: {
       type: Number,
       required: function () {
-        return (this as any).role === UserRole.CHILD;
+        return (this as any).role === UserRoleEnum.CHILD;
       },
     },
-    following: { type: Schema.Types.ObjectId, ref: "users" },
+    password: { type: String },
+    token: { type: String },
+    following: [{ type: Schema.Types.ObjectId, ref: "User", default: [] }],
   },
   { collection: "users" }
 );

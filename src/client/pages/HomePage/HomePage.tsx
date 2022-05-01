@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material";
+import { Theme, Typography } from "@mui/material";
 import { FeedService } from "../../services/FeedService";
 import { PostCard } from "../../components/PostCard";
+import { PostCreationCard } from "../../components/PostCreationCard";
+import { ProfileService } from "../../services/ProfileService";
+import { UserCard } from "../../components/UserCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -28,18 +31,27 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const HomePage = () => {
   const [posts, setPosts] = React.useState<any>(undefined);
+  const [users, setUsers] = useState<Array<any>>();
   const classes = useStyles();
   const loadPosts = async () => {
     const data = await FeedService.getFeed();
     setPosts(data);
   };
+  const loadUsers = async () => {
+    const data = await ProfileService.getProfiles();
+    setUsers(data);
+  };
 
   useEffect(() => {
     loadPosts();
+    loadUsers();
   }, []);
 
   return (
     <div className={classes.root}>
+      <div className={classes.cardContainer}>
+        <PostCreationCard />
+      </div>
       {posts &&
         posts?.map((post: any, index: number) => {
           return (
@@ -49,6 +61,24 @@ export const HomePage = () => {
           );
         })}
       {!posts && <h1>Loading...</h1>}
+      {posts?.length === 0 && (
+        <Typography variant="h6">
+          Looks like nobody you are following has posted yet! Try following some
+          more users to see some posts in your feed
+        </Typography>
+      )}
+      {posts?.length > 0 && (
+        <Typography variant="h6">
+          Looks like there are no more posts in your feed! Try following some of
+          these other users below!
+        </Typography>
+      )}
+      <div className={classes.cardContainer}>
+        {users &&
+          users.map((user) => {
+            return <UserCard user={user} />;
+          })}
+      </div>
     </div>
   );
 };
