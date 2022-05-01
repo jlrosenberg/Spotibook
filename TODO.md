@@ -1,10 +1,9 @@
 Things to do REQUIRED: 
 - Child Censor Bad Words when Fetching Posts
 - Remove Forced Auth from Home Page and View Profile Page
-- Make it so clicking on Spotibook in nav bar goes to home feed
 - Fix register link on login page
-- add like/dislike functionality
 - NavBar styling/links on small width screens
+- Make it so clicking on Spotibook in nav bar goes to home feed
 - Add follow button to profiles page when not self
 
 Things I'm not sure if are required
@@ -13,6 +12,7 @@ Things I'm not sure if are required
 
 
 Things to do nice to have:
+- add like/dislike functionality
 - navigate to user when clicking their name on a post
 - Add follow button to post card when viweing post from someone not following
 - Admin Role? (can edit all profiles)
