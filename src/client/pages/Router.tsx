@@ -6,6 +6,7 @@ import { LoggedInPage } from "./LoggedInPage";
 import { LoginPage } from "./LoginPage";
 import { ProfilePage } from "./ProfilePage";
 import { RegistrationPage } from "./RegistrationPage";
+import { SearchPage } from "./SearchPage";
 
 export const Router = () => {
   // TODO for auth protected pages, redirect to Login Page
@@ -25,7 +26,7 @@ export const Router = () => {
           <Route path='/' element={<HomePage />} />
           <Route path='/profile/:profileId/edit' element={<EditProfilePage /> } />
           <Route path='/profile/:profileId' element={<ProfilePage /> } />
-          
+          <Route path='/songs/:songId' element={<SearchPage /> } />
         </Route>
       </Routes>
     </BrowserRouter>

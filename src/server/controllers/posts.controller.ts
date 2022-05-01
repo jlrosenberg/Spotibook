@@ -28,6 +28,13 @@ export const getPostsByUser = async (req: Request, res: Response) => {
     res.json(posts)
 }
 
+export const getPostsForSong = async (req: Request, res: Response) => {
+    const songId = req.params.songId;
+    console.log(songId)
+
+    const posts = await Post.find({ songId: songId }).populate("likes").populate("user");
+    res.json(posts)
+}
 export interface CreatePostPayload {
     message: string;
     songId: string;

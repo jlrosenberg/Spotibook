@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cookieParser from 'cookie-parser';
 import mongoose from "mongoose";
-import { createPost, getPosts, getPostsByUser, likePost } from "./controllers/posts.controller";
+import { createPost, getPosts, getPostsByUser, getPostsForSong, likePost } from "./controllers/posts.controller";
 import {
   createUser,
   editUser,
@@ -14,7 +14,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 import { spotifyAuthorize } from "./spotify_auth";
 import { verifyToken } from "./middleware/auth";
 import { isLoggedIn, login, logout } from "./controllers/sessions.controller";
-import { searchForSongs } from "./controllers/spotifySearch.controller";
+import { getSongById, searchForSongs } from "./controllers/spotifySearch.controller";
 const path = require("path");
 
 const PORT = process.env.port ?? 4443;
@@ -44,9 +44,11 @@ const main = async () => {
 
   // Posts
   app.get("/api/v1/posts", getPosts);
+  app.get("/api/v1/songs/:songId/posts", getPostsForSong);
   app.post("/api/v1/posts", verifyToken, createPost);
   app.post("/api/v1/posts/:postId/like", verifyToken, likePost);
 
+  app.get("/api/v1/songs/:songId", getSongById);
   app.post("/api/v1/songs/search", searchForSongs)
 
   // Users

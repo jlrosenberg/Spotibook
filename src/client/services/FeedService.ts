@@ -21,4 +21,9 @@ export class FeedService {
     const res = await $.get(`/api/v1/users/${userId}/posts`)
     return res
   }
+
+  static getPostsForSong = async(songId: any): Promise<Array<any>> => {
+    const res = await $.get(`/api/v1/songs/${songId}/posts`)
+    return res
+  }
 }

@@ -13,4 +13,9 @@ export class SearchService {
     console.log(res);
     return res
   }
+
+  static getSongById = async (songId: string): Promise<any> => {
+    const res = await $.get(`/api/v1/songs/${songId}`);
+    return res
+  }
 }

@@ -3,8 +3,6 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  TextField,
-  InputAdornment,
   Avatar,
   Popover,
   ListItem,
@@ -13,13 +11,13 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 
 import React, { useState } from "react";
-import { Search } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { Colors } from "../common/colors";
 import { CurrentUserStore } from "../stores/CurrentUserStore";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import { LoginService } from "../services/LoginService";
+import { SongPicker } from "./SongPicker";
 
 const useStyles = makeStyles({
   root: {
@@ -42,30 +40,31 @@ const useStyles = makeStyles({
 
 export const NavBar = observer(() => {
   const classes = useStyles();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const user = CurrentUserStore.getInstance().user;
-  
-  const onProfileClicked = (e: any) => {
-    setAnchorEl(e.currentTarget)
-  }
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-  };
+  const filterExplicit = user?.role === "CHILD";
 
+  const onProfileClicked = (e: any) => {
+    setAnchorEl(e.currentTarget);
+  };
   const [anchorEl, setAnchorEl] = useState();
 
   const onViewProfile = () => {
     navigate(`/profile/${user.user_id ?? user._id}`);
-  }
+  };
 
   const onEditProfile = () => {
     navigate(`/profile/${user.user_id ?? user._id}/edit`);
-  }
+  };
 
-  const onLogOut = async() => {
+  const onLogOut = async () => {
     await LoginService.logout();
     navigate("/login");
-  }
+  };
+
+  const onSearch = async (song: any) => {
+    navigate(`/songs/${song.id}`);
+  };
 
   return (
     <AppBar position="static">
@@ -85,35 +84,38 @@ export const NavBar = observer(() => {
           </Typography>
         </div>
 
-        <TextField
-          placeholder="Search"
-          variant="standard"
-          className={classes.searchField}
-          onChange={onSearch}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Search></Search>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <IconButton onClick={onProfileClicked}><Avatar src={user.avatar}/></IconButton>
+        <div className={classes.searchField}>
+          <SongPicker
+            filterExplicit={filterExplicit}
+            onSongSelected={onSearch}
+            placeholder="Search for posts about a song"
+            width="400px"
+          />
+        </div>
+        <IconButton onClick={onProfileClicked}>
+          <Avatar src={user.avatar} />
+        </IconButton>
         <Popover
-              id='settings'
-              open={!!anchorEl}
-              anchorEl={anchorEl}
-              onClose={() => setAnchorEl(undefined)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-            >
-              <List>
-                <ListItem onClick={onViewProfile}><Typography>View Profile</Typography></ListItem>
-                <ListItem onClick={onEditProfile}><Typography>Edit Profile</Typography></ListItem>
-                <ListItem onClick={onLogOut}><Typography>Log out</Typography></ListItem>
-              </List>
+          id="settings"
+          open={!!anchorEl}
+          anchorEl={anchorEl}
+          onClose={() => setAnchorEl(undefined)}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+        >
+          <List>
+            <ListItem onClick={onViewProfile}>
+              <Typography>View Profile</Typography>
+            </ListItem>
+            <ListItem onClick={onEditProfile}>
+              <Typography>Edit Profile</Typography>
+            </ListItem>
+            <ListItem onClick={onLogOut}>
+              <Typography>Log out</Typography>
+            </ListItem>
+          </List>
         </Popover>
       </Toolbar>
     </AppBar>

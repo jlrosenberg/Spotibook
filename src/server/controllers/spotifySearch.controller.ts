@@ -13,3 +13,11 @@ export const searchForSongs = async (req: Request<SongSearchRequestPayload>, res
     res.json(songs.body.tracks.items)
     // const res = await axios.get(`https://api.spotify.com/v1/search?q=${searchTerm}&type=track`);
 }
+
+export const getSongById = async (req: Request, res: Response) => {
+    const songId = req.params.songId
+
+    const spotify = getSpotifyApi()
+    const song = await spotify.getTrack(songId)
+    res.json(song.body)
+}
