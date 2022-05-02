@@ -263,7 +263,7 @@ export const RegistrationPage = () => {
             onChange={onPasswordChange}
             className={classes.field}
             fullWidth
-            helperText="Password must be at least 8 characters long"
+            // help,erText="Password must be at least 8 characters long"
             error={!!passwordError}
           />
           <TextField
