@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { FeedService } from "../../services/FeedService";
 import { CurrentUserStore } from "../../stores/CurrentUserStore";
 import { SongPicker } from "../SongPicker";
-
+import Filter from "bad-words";
 export const PostCreationCard = () => {
   const [song, setSong] = useState<any>();
   const [message, setMessage] = useState<string>();
@@ -20,6 +20,7 @@ export const PostCreationCard = () => {
   const isChild = user.role === "CHILD";
   const isLoggedIn = !!user;
   const navigate = useNavigate();
+  const filter = new Filter();
 
   const onSubmitClicked = async () => {
     if (!isLoggedIn) {
@@ -28,6 +29,12 @@ export const PostCreationCard = () => {
       );
       navigate("/login");
     } else {
+      if (isChild && filter.isProfane(message!)) {
+        alert(
+          "Children cannot use profane words in posts. Please clean up your language and try again"
+        );
+        return;
+      }
       setSubmitting(true);
       await FeedService.createPost({
         message,
@@ -39,6 +46,35 @@ export const PostCreationCard = () => {
       setSubmitting(false);
     }
   };
+
+  if (!isLoggedIn) {
+    return (
+      <Card>
+        <CardHeader title="You must be logged in to create a post" />
+        <CardActions>
+          <Button
+            fullWidth
+            variant="outlined"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Click here to log in
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            onClick={() => {
+              navigate("/register");
+            }}
+          >
+            Click here to register
+          </Button>
+        </CardActions>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader title="Share something new with your spotibook squad" />

@@ -38,7 +38,9 @@ export const followUser = async(req: Request, res: Response) => {
   currentUserDb.following.push(userToFollowDb._id);
   await currentUserDb.save();
 
-  res.json({ message: "User followed" });
+  const newUser = await User.findById(currentUser.user_id);
+
+  res.json(newUser);
 
 }
 

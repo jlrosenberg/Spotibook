@@ -1,9 +1,11 @@
 import { Avatar, Button, Card, Link, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { UserPayload } from "../../../shared/payloads";
 import { ProfileService } from "../../services/ProfileService";
+import { CurrentUserStore } from "../../stores/CurrentUserStore";
 
 interface Props {
   user: UserPayload;
@@ -25,9 +27,12 @@ const useStyles = makeStyles({
   },
 });
 
-export const UserCard: React.FC<Props> = ({ user }) => {
+export const UserCard: React.FC<Props> = observer(({ user }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+
+  const currentUser = CurrentUserStore.getInstance().user;
+  const alreadyFollowing = currentUser ? currentUser.following.includes(user._id) : true
 
   const onProfileClicked = (e: any) => {
     e.preventDefault();
@@ -51,7 +56,7 @@ export const UserCard: React.FC<Props> = ({ user }) => {
         </Link>
       </div>
 
-      <Button onClick={onFollowClicked}>Follow</Button>
+      {!alreadyFollowing && <Button onClick={onFollowClicked}>Follow</Button>}
     </Card>
   );
-};
+});

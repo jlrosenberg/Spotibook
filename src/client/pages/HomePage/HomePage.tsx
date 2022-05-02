@@ -6,6 +6,7 @@ import { PostCard } from "../../components/PostCard";
 import { PostCreationCard } from "../../components/PostCreationCard";
 import { ProfileService } from "../../services/ProfileService";
 import { UserCard } from "../../components/UserCard";
+import { CurrentUserStore } from "../../stores/CurrentUserStore";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -33,13 +34,20 @@ export const HomePage = () => {
   const [posts, setPosts] = React.useState<any>(undefined);
   const [users, setUsers] = useState<Array<any>>();
   const classes = useStyles();
+  const loggedIn = !!CurrentUserStore.getInstance().user;
   const loadPosts = async () => {
     const data = await FeedService.getFeed();
     setPosts(data);
   };
   const loadUsers = async () => {
     const data = await ProfileService.getProfiles();
-    setUsers(data);
+    const cleanData = data.filter((user) => {
+      const isSameUser = user._id === CurrentUserStore.getInstance().user._id;
+      const isNotFollowing = !CurrentUserStore.getInstance().user?.following?.includes(user._id);
+
+      return !isSameUser && isNotFollowing;;
+    });
+    setUsers(cleanData);
   };
 
   useEffect(() => {
@@ -61,13 +69,13 @@ export const HomePage = () => {
           );
         })}
       {!posts && <h1>Loading...</h1>}
-      {posts?.length === 0 && (
+      {(loggedIn && posts?.length === 0) && (
         <Typography variant="h6">
           Looks like nobody you are following has posted yet! Try following some
           more users to see some posts in your feed
         </Typography>
       )}
-      {posts?.length > 0 && (
+      {loggedIn && posts?.length > 0 && (
         <Typography variant="h6">
           Looks like there are no more posts in your feed! Try following some of
           these other users below!

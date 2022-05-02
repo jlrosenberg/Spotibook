@@ -16,6 +16,7 @@ export class ProfileService {
 
   static followProfile = async (profileId: any): Promise<any> => {
     const res = await $.post(`/api/v1/users/${profileId}/follow`);
+    CurrentUserStore.getInstance().setUser(res);
     return res;
   };
 

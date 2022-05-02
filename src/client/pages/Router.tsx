@@ -17,9 +17,9 @@ export const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-
         <Route path="/registration" element={<RegistrationPage />} />
-
+        <Route path="/register" element={<RegistrationPage />} />
+        
         <Route path="/" element={<LoggedInPage />}>
           {/* TODO remove dupe routes by using the useRoutes hook introduced with v6 */}
           <Route path='/home' element={<HomePage />} />
@@ -27,6 +27,7 @@ export const Router = () => {
           <Route path='/profile/:profileId/edit' element={<EditProfilePage /> } />
           <Route path='/profile/:profileId' element={<ProfilePage /> } />
           <Route path='/songs/:songId' element={<SearchPage /> } />
+          <Route path='/details/:songId' element={<SearchPage /> } />
         </Route>
       </Routes>
     </BrowserRouter>

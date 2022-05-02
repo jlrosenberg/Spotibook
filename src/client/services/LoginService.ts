@@ -22,6 +22,6 @@ export class LoginService {
 
   static logout = async(): Promise<void> => {
     await $.get("/api/v1/logout");
-    CurrentUserStore.getInstance().setUser(null);
+    // CurrentUserStore.getInstance().setUser(null);
   }
 }

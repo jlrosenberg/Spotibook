@@ -8,7 +8,6 @@ import {
   ListItem,
   List,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 
 import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
@@ -18,7 +17,7 @@ import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import { LoginService } from "../services/LoginService";
 import { SongPicker } from "./SongPicker";
-import { Login } from "@mui/icons-material";
+import { Home, Login } from "@mui/icons-material";
 
 const useStyles = makeStyles({
   root: {
@@ -28,6 +27,8 @@ const useStyles = makeStyles({
   },
   searchField: {
     background: Colors.white,
+    width: '100%',
+    maxWidth: '400px',
     borderRadius: "8px",
     "& .MuiInputBase-input": {
       padding: "8px !important",
@@ -82,12 +83,14 @@ export const NavBar = observer(() => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={() => navigate("/")}
           >
-            <MenuIcon />
+            {/* <MenuIcon /> */}
+            <Home />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          {/* <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Spotibook
-          </Typography>
+          </Typography> */}
         </div>
 
         <div className={classes.searchField}>
@@ -95,10 +98,10 @@ export const NavBar = observer(() => {
             filterExplicit={filterExplicit}
             onSongSelected={onSearch}
             placeholder="Search for posts about a song"
-            width="400px"
+            // width="400px"
           />
         </div>
-        <IconButton onClick={onProfileClicked}>
+        <IconButton onClick={onProfileClicked} color="inherit">
           {user ? <Avatar src={user.avatar} /> : <Login />}
         </IconButton>
         <Popover

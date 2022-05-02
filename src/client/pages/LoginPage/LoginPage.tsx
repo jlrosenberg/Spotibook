@@ -1,4 +1,4 @@
-import { Button, TextField, Theme, Typography } from "@mui/material";
+import { Button, Link, TextField, Theme, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -30,22 +30,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up("md")]: {
       position: "absolute",
       right: "100px",
-      width: '275px',
+      width: "275px",
     },
     [theme.breakpoints.down("md")]: {
       width: "50%",
-      height: '50%',
+      height: "50%",
       borderRadius: "32px",
       opacity: 0.95,
-
     },
     [theme.breakpoints.down("sm")]: {
       width: "75%",
-      height: '75%',
+      height: "75%",
     },
     [theme.breakpoints.down("xs")]: {
       width: "85%",
-      height: '85%',
+      height: "85%",
     },
   },
   field: {
@@ -55,53 +54,60 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up("md")]: {
       position: "absolute",
       right: "130px",
-      top: '20px',
+      top: "20px",
       zIndex: 3,
-      marginBottom: '16px',
+      marginBottom: "16px",
     },
-
-  }
+  },
 }));
 
 export const LoginPage = () => {
   const classes = useStyles();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await LoginService.login({email, password});
-    checkLoggedIn()
-  }
+    await LoginService.login({ email, password });
+    checkLoggedIn();
+  };
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  }
+  };
 
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  }
+  };
 
-  const checkLoggedIn = async() => {
-    // TODO josh fix the return type of getIsLoggedIn 
-    const res = await LoginService.getIsLoggedIn() as any
-    if(res.email){
-      navigate('../home', {replace: true})
+  const checkLoggedIn = async () => {
+    // TODO josh fix the return type of getIsLoggedIn
+    const res = (await LoginService.getIsLoggedIn()) as any;
+    if (res.email) {
+      navigate("../home", { replace: true });
     }
-    console.log(res)
-  }
+    console.log(res);
+  };
 
-  useEffect(()=>{
-    checkLoggedIn()
-  }, [])
+  const onRegisterClick = () => {
+    navigate("../register");
+  };
+
+  useEffect(() => {
+    checkLoggedIn();
+  }, []);
 
   return (
     <div className={classes.root}>
-      <Typography variant="h2" className={classes.appNameContainer}>Spotibook</Typography>
+      <Typography variant="h2" className={classes.appNameContainer}>
+        Spotibook
+      </Typography>
 
       <form className={classes.formContainer} onSubmit={onLoginSubmit}>
-        <Typography>New user? Click here to register!</Typography>
+        <Link onClick={onRegisterClick}>
+          <Typography>New user? Click here to register!</Typography>
+        </Link>
         <TextField
           label="email"
           type="email"
@@ -118,8 +124,12 @@ export const LoginPage = () => {
           className={classes.field}
           fullWidth
         />
-        <Typography variant="body2"><a href="foo">Forgot your password?</a></Typography>
-        <Button type="submit" variant="contained" color="primary">Login</Button>
+        <Typography variant="body2">
+          <a href="foo">Forgot your password?</a>
+        </Typography>
+        <Button type="submit" variant="contained" color="primary">
+          Login
+        </Button>
       </form>
     </div>
   );

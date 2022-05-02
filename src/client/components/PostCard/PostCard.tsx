@@ -1,11 +1,10 @@
-import { ThumbUp, Share, Comment } from "@mui/icons-material";
+// import { ThumbUp, Share, Comment } from "@mui/icons-material";
 import {
   Card,
   CardHeader,
   Avatar,
   IconButton,
   CardContent,
-  CardActions,
   Theme,
   Typography,
   Popover,
@@ -14,7 +13,10 @@ import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import type { PostPayload } from "../../../shared/payloads";
 import { makeStyles } from "@mui/styles";
-import { FeedService } from "../../services/FeedService";
+import { useNavigate } from "react-router-dom";
+import { CurrentUserStore } from "../../stores/CurrentUserStore";
+import Filter from 'bad-words'
+// import { FeedService } from "../../services/FeedService";
 
 interface Props {
   post: PostPayload;
@@ -30,29 +32,49 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 export const PostCard: React.FC<Props> = ({ post }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState();
+  const currentUser = CurrentUserStore.getInstance().user;
+  const isChild = currentUser.role === "CHILD";
+  const filter = new Filter();
 
+
+  const message = isChild ? filter.clean(post.message) : post.message;
   const onMoreClick = (e: any) => {
-    setAnchorEl(e.currentTarget)
+    setAnchorEl(e.currentTarget);
   };
 
-  const onLikeClick = async() => {
-    await FeedService.likePost(post._id);
-  }
+  // const onLikeClick = async() => {
+  //   await FeedService.likePost(post._id);
+  // }
 
   return (
     <Card>
       <CardHeader
         avatar={
-          <Avatar src={post.user.avatar}>{post.user.name.charAt(0)}</Avatar>
+          <Avatar
+            src={post.user.avatar}
+            onClick={() => {
+              navigate(`/profile/${post.user._id}`);
+            }}
+          >
+            {post.user.name.charAt(0)}
+          </Avatar>
         }
+        onClick={() => {
+          navigate(`/profile/${post.user._id}`);
+        }}
         action={
           <>
-            <IconButton aria-label="settings" aria-describedby={'settings'} onClick={onMoreClick}>
+            <IconButton
+              aria-label="settings"
+              aria-describedby={"settings"}
+              onClick={onMoreClick}
+            >
               <MoreVertIcon />
             </IconButton>
             <Popover
-              id='settings'
+              id="settings"
               open={!!anchorEl}
               anchorEl={anchorEl}
               onClose={() => setAnchorEl(undefined)}
@@ -71,7 +93,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
         className={classes.header}
       />
       <CardContent className={classes.content}>
-        <Typography paragraph>{post.message}</Typography>
+        <Typography paragraph>{message}</Typography>
         <iframe
           style={{ borderRadius: "12px" }}
           src={`https://open.spotify.com/embed/track/${post.songId}?utm_source=generator`}
@@ -82,7 +104,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         ></iframe>
       </CardContent>
-      <CardActions>
+      {/* <CardActions>
         <IconButton onClick={onLikeClick}>
           <ThumbUp />
         </IconButton>
@@ -92,7 +114,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
         <IconButton>
           <Share />
         </IconButton>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 };
